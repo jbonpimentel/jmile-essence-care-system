@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Login — J'mile Essence Care</title>
+  <meta name="description" content="Sistema de gestão J'mile Essence Care — Acesse sua conta">
+
+  <!-- PWA: Manifest -->
+  <link rel="manifest" href="../manifest.json">
+
+  <!-- PWA: Theme color (Android barra de status) -->
+  <meta name="theme-color" content="#0C391F">
+  <meta name="msapplication-TileColor" content="#0C391F">
+  <meta name="msapplication-TileImage" content="../assets/icons/icon-192.png">
+
+  <!-- PWA: Apple / iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="J'Mile">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="apple-touch-startup-image" href="../assets/icons/icon-512.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../assets/icons/icon-512.png">
+  <link rel="shortcut icon" href="../assets/icons/icon-192.png">
+
+  <!-- Open Graph (para compartilhamento) -->
+  <meta property="og:title" content="J'mile Essence Care — Sistema de Gestão">
+  <meta property="og:description" content="Sistema de gestão para clínica de estética">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/icons/icon-512.png">
+
+  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../css/mobile.css">
+</head>
+<body>
+
+  <!-- Background decorativo -->
+  <div class="login-bg">
+    <div class="login-bg__orb login-bg__orb--1"></div>
+    <div class="login-bg__orb login-bg__orb--2"></div>
+  </div>
+
+  <!-- Partículas -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Card -->
+  <div class="login-wrapper">
+    <div class="login-card">
+
+      <!-- Marca -->
+      <div class="login-brand">
+        <img src="../assets/images/logo.png" alt="J'mile Essence Care" class="login-brand__logo-img">
+        <div class="login-brand__name">J'mile Essence Care</div>
+        <div class="login-brand__sub">Sistema de Gestão</div>
+      </div>
+
+      <h1 class="login-title">Acesse sua conta</h1>
+
+      <!-- Formulário -->
+      <form id="login-form" novalidate>
+
+        <div class="form-error" id="login-error">
+          <span>⚠</span>
+          <span id="login-error-msg">Usuário ou senha inválidos.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="login-user">Usuário</label>
+          <div class="input-wrap">
+            <span class="input-wrap__icon">👤</span>
+            <input
+              type="text"
+              id="login-user"
+              name="usuario"
+              class="form-control"
+              placeholder="Digite seu usuário"
+              autocomplete="username"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="login-pass">Senha</label>
+          <div class="input-wrap">
+            <span class="input-wrap__icon">🔒</span>
+            <input
+              type="password"
+              id="login-pass"
+              name="senha"
+              class="form-control"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+            <button type="button" class="input-toggle" id="toggle-pass" aria-label="Mostrar senha">
+              👁
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="btn-login">
+          <span class="btn-login__spinner"></span>
+          <span class="btn-login__label">Entrar</span>
+        </button>
+
+      </form>
+
+      <div class="login-footer">
+        &copy; 2025 J'mile Essence Care &mdash; Todos os direitos reservados
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/storage/storage.js"></script>
+  <script src="../js/login.js"></script>
+
+  <!-- PWA: Registro do Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../service-worker.js', { scope: '/' })
+          .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
+          .catch(err => console.warn('[PWA] Erro ao registrar SW:', err));
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+/* =========================================================
+   mobile.css — Responsividade Mobile | J'mile Essence Care
+   Breakpoints: < 768px (celular), 768-1024px (tablet)
+   ========================================================= */
+
+/* ── Tablet ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  :root { --sidebar-w: 220px; }
+}
+
+/* ── Login: Mobile ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .login-card {
+    padding: 32px 24px;
+    border-radius: 20px;
+    margin: 16px;
+  }
+  .login-brand__logo-img { width: 120px; height: 120px; }
+  .login-brand__name { font-size: 1.35rem; }
+}
+
+/* ── Dashboard Mobile ────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* Layout vira empilhado */
+  html, body { overflow: hidden; height: 100%; }
+  .app {
+    flex-direction: column;
+    height: 100dvh; /* dynamic viewport height (safe-area aware) */
+  }
+
+  /* Sidebar vira bottom nav bar */
+  .sidebar {
+    width: 100% !important;
+    height: auto;
+    flex-direction: row;
+    border-right: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    order: 2;
+    padding: 0;
+    box-shadow: 0 -4px 20px rgba(12,57,31,0.20);
+    /* Safe area para iPhone com home indicator */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Esconde elementos da sidebar que não cabem no bottom nav */
+  .sidebar__brand,
+  .sidebar__user,
+  .nav-section-label {
+    display: none;
+  }
+
+  /* Nav vira horizontal */
+  .sidebar__nav {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 6px 4px;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar__nav::-webkit-scrollbar { display: none; }
+
+  .nav__item {
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    min-width: 60px;
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.6);
+  }
+  .nav__icon { font-size: 20px; width: auto; }
+  .nav__label { font-size: 0.6rem; white-space: nowrap; }
+  .nav__badge { display: none; }
+  .nav__item.active {
+    color: var(--green-dark);
+    background: var(--green-light);
+  }
+
+  /* Main ocupa todo o espaço */
+  .main { flex: 1; order: 1; overflow: hidden; min-height: 0; }
+
+  /* Topbar menor */
+  .topbar {
+    height: 52px;
+    padding: 0 16px;
+    /* Safe area para notch do iPhone */
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .topbar__title { font-size: 1rem; }
+  .topbar__date  { display: none; }
+
+  /* Content com padding menor */
+  .content { padding: 16px; }
+
+  /* Stats grid: 2 colunas no celular */
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat-card  { padding: 14px; gap: 10px; }
+  .stat-card__icon { width: 38px; height: 38px; font-size: 16px; border-radius: 10px; }
+  .stat-card__value { font-size: 1.2rem; }
+
+  /* Page header empilhado */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .page-header__title { font-size: 1.2rem; }
+
+  /* Toolbar empilhada */
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbar__search { min-width: unset; }
+
+  /* Tabela em card compacto */
+  .data-table thead { display: none; }
+  .data-table tbody tr {
+    display: block;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border: 1.5px solid var(--border-2);
+    border-radius: 12px;
+    background: var(--surface) !important;
+    box-shadow: 0 2px 8px rgba(12,57,31,0.06);
+  }
+  .data-table tbody td {
+    display: block;
+    padding: 4px 0;
+    border: none;
+    font-size: 0.875rem;
+  }
+  .data-table tbody td::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--green-dark);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .data-table tbody td:first-child { padding-left: 0; }
+  .data-table tbody td:last-child  { padding-right: 0; padding-top: 10px; }
+  .td-actions { justify-content: flex-end; }
+
+  /* Modal tela cheia no celular */
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal {
+    border-radius: 20px 20px 0 0;
+    max-width: 100%;
+    max-height: 92vh;
+  }
+  .form-row--2, .form-row--3 { grid-template-columns: 1fr; }
+
+  /* Calendário simplificado */
+  .calendar-day { min-height: 54px; padding: 4px; }
+  .calendar-day__num { font-size: 0.75rem; }
+  .cal-event { display: none; }
+
+  /* Financeiro: summary 2 colunas */
+  .finance-summary { grid-template-columns: repeat(2, 1fr); }
+
+  /* Botões menores */
+  .btn--lg { height: 42px; font-size: 0.9rem; }
+}
+
+/* ── Celular pequeno (< 390px) ───────────────────────────── */
+@media (max-width: 390px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .nav__item  { padding: 6px 8px; min-width: 52px; }
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>J'mile Essence Care — Sistema de Gestão</title>
+  <meta name="description" content="Sistema de gestão J'mile Essence Care: clientes, procedimentos, agendamentos e financeiro.">
+
+  <!-- PWA: Manifest -->
+  <link rel="manifest" href="../manifest.json">
+
+  <!-- PWA: Theme color -->
+  <meta name="theme-color" content="#0C391F">
+  <meta name="msapplication-TileColor" content="#0C391F">
+  <meta name="msapplication-TileImage" content="../assets/icons/icon-192.png">
+
+  <!-- PWA: Apple / iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="J'Mile">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="apple-touch-startup-image" href="../assets/icons/icon-512.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../assets/icons/icon-512.png">
+  <link rel="shortcut icon" href="../assets/icons/icon-192.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="J'mile Essence Care — Sistema de Gestão">
+  <meta property="og:description" content="Sistema de gestão para clínica de estética">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/icons/icon-512.png">
+
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/tables.css">
+  <link rel="stylesheet" href="../css/mobile.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- ── SIDEBAR ────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">
+          <img src="../assets/images/logo.png" alt="Logo J'mile" class="sidebar__logo-img">
+        </div>
+        <div>
+          <div class="sidebar__name">J'mile Essence Care</div>
+          <div class="sidebar__tagline">Gestão Estética</div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar__nav" id="sidebar-nav">
+
+        <div class="nav-section-label">Menu Principal</div>
+
+        <a class="nav__item" data-module="clientes" href="#" id="nav-clientes">
+          <span class="nav__icon">👥</span>
+          <span class="nav__label">Clientes</span>
+          <span class="nav__badge">0</span>
+        </a>
+
+        <a class="nav__item" data-module="procedimentos" href="#" id="nav-procedimentos">
+          <span class="nav__icon">✨</span>
+          <span class="nav__label">Procedimentos</span>
+        </a>
+
+        <a class="nav__item" data-module="calendario" href="#" id="nav-calendario">
+          <span class="nav__icon">📅</span>
+          <span class="nav__label">Calendário</span>
+          <span class="nav__badge">0</span>
+        </a>
+
+        <a class="nav__item" data-module="financeiro" href="#" id="nav-financeiro">
+          <span class="nav__icon">💰</span>
+          <span class="nav__label">Financeiro</span>
+        </a>
+
+        <div class="nav-section-label">Configurações</div>
+
+        <a class="nav__item" data-module="contas" href="#" id="nav-contas">
+          <span class="nav__icon">⚙️</span>
+          <span class="nav__label">Gerenciamento de Conta</span>
+        </a>
+
+      </nav>
+
+      <!-- User -->
+      <div class="sidebar__user">
+        <div class="sidebar__avatar" id="sidebar-avatar">J</div>
+        <div class="sidebar__user-info">
+          <div class="sidebar__user-name" id="sidebar-username">—</div>
+          <div class="sidebar__user-role" id="sidebar-userrole">—</div>
+        </div>
+        <button class="sidebar__logout" id="btn-logout" title="Sair">🚪</button>
+      </div>
+
+    </aside>
+
+    <!-- ── MAIN ──────────────────────────────────────────── -->
+    <main class="main">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="topbar__left">
+          <div>
+            <div class="topbar__title" id="topbar-title">Dashboard</div>
+            <div class="topbar__breadcrumb">
+              <span>J'mile</span>
+              <span>›</span>
+              <b id="topbar-breadcrumb">Início</b>
+            </div>
+          </div>
+        </div>
+        <div class="topbar__right">
+          <span class="topbar__date" id="topbar-date"></span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="content" id="content-area">
+        <div class="loading">
+          <div class="loading__spinner"></div>
+          <p>Carregando...</p>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts (ordem importa: storage → helpers → ui → módulos → dashboard) -->
+  <script src="../js/storage/storage.js"></script>
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/utils/ui.js"></script>
+  <script src="../js/modules/clientes.js"></script>
+  <script src="../js/modules/procedimentos.js"></script>
+  <script src="../js/modules/calendario.js"></script>
+  <script src="../js/modules/financeiro.js"></script>
+  <script src="../js/modules/contas.js"></script>
+  <script src="../js/dashboard.js"></script>
+
+  <!-- PWA: Registro do Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../service-worker.js', { scope: '/' })
+          .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
+          .catch(err => console.warn('[PWA] Erro ao registrar SW:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
