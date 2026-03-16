@@ -8,7 +8,9 @@ const ModuleCalendario = {
   selectedDate: null,
 
   render() {
-    const area = document.getElementById('content-area');
+    const area     = document.getElementById('content-area');
+    const isMobile = window.innerWidth <= 768;
+
     area.innerHTML = `
       <div class="page-header">
         <div class="page-header__info">
@@ -22,7 +24,11 @@ const ModuleCalendario = {
 
       <div class="stats-grid" id="cal-stats"></div>
 
-      <div class="cal-layout">
+      <div class="cal-layout"
+           style="${isMobile
+             ? 'display:flex; flex-direction:column; gap:14px;'
+             : 'display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start;'}"
+      >
         <!-- Calendário -->
         <div class="table-card cal-grid-card">
           <div class="calendar-nav">
@@ -33,8 +39,11 @@ const ModuleCalendario = {
           <div class="calendar-grid" id="cal-grid"></div>
         </div>
 
-        <!-- Painel lateral do dia -->
-        <div class="cal-panel-wrap">
+        <!-- Painel lateral / inferior do dia -->
+        <div class="cal-panel-wrap"
+             id="cal-panel-wrap"
+             style="${isMobile ? 'display:none;' : ''}"
+        >
           <div class="day-schedule" id="day-panel">
             <div class="day-schedule__header">
               <span id="day-panel-title">Selecione um dia</span>
@@ -165,13 +174,20 @@ const ModuleCalendario = {
 
     document.querySelectorAll('.calendar-day').forEach(el => el.style.outline = '');
     const dayEl = document.querySelector(`.calendar-day[data-date="${dateStr}"]`);
-    if (dayEl) dayEl.style.outline = '2px solid var(--rose)';
+    if (dayEl) dayEl.style.outline = '2px solid var(--primary)';
 
     const formatted = new Date(dateStr + 'T12:00:00').toLocaleDateString('pt-BR', {
       weekday: 'long', day: '2-digit', month: 'long'
     });
     document.getElementById('day-panel-title').textContent = formatted;
     document.getElementById('btn-add-day').style.display = 'inline-flex';
+
+    // No mobile: exibe e rola até o painel
+    const panelWrap = document.getElementById('cal-panel-wrap');
+    if (panelWrap) {
+      panelWrap.style.display = 'block';
+      setTimeout(() => panelWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+    }
 
     this.renderDayPanel(dateStr);
   },
