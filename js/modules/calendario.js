@@ -22,9 +22,9 @@ const ModuleCalendario = {
 
       <div class="stats-grid" id="cal-stats"></div>
 
-      <div style="display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start">
+      <div class="cal-layout">
         <!-- Calendário -->
-        <div class="table-card" style="padding:20px">
+        <div class="table-card cal-grid-card">
           <div class="calendar-nav">
             <button class="btn btn--outline btn--sm" id="cal-prev">◀ Anterior</button>
             <div class="calendar-nav__title" id="cal-title"></div>
@@ -34,7 +34,7 @@ const ModuleCalendario = {
         </div>
 
         <!-- Painel lateral do dia -->
-        <div>
+        <div class="cal-panel-wrap">
           <div class="day-schedule" id="day-panel">
             <div class="day-schedule__header">
               <span id="day-panel-title">Selecione um dia</span>

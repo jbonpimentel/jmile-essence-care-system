@@ -154,10 +154,52 @@
   }
   .form-row--2, .form-row--3 { grid-template-columns: 1fr; }
 
-  /* Calendário simplificado */
-  .calendar-day { min-height: 54px; padding: 4px; }
-  .calendar-day__num { font-size: 0.75rem; }
-  .cal-event { display: none; }
+  /* Calendário: empilha grade + painel verticalmente */
+  .cal-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px;
+  }
+  .cal-panel-wrap { width: 100%; }
+
+  /* Card do calendário */
+  .cal-grid-card { padding: 12px !important; }
+
+  /* Navegação do mês mais compacta */
+  .calendar-nav { margin-bottom: 10px; }
+  .calendar-nav__title { font-size: 0.95rem; }
+
+  /* Grade: células menores e com altura fixa */
+  .calendar-grid { gap: 3px !important; }
+  .calendar-grid__header {
+    font-size: 0.6rem;
+    padding: 4px 0;
+  }
+  .calendar-day {
+    min-height: 40px !important;
+    padding: 4px 3px !important;
+    border-radius: 6px !important;
+  }
+  .calendar-day__num {
+    font-size: 0.72rem !important;
+    margin-bottom: 2px;
+  }
+  .calendar-day__today-dot { width: 5px; height: 5px; }
+
+  /* Mostrar eventos (sobrescreve o display:none anterior) */
+  .cal-event {
+    display: block !important;
+    font-size: 0.58rem !important;
+    padding: 1px 3px !important;
+    margin-bottom: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cal-event__time { display: none; }
+
+  /* Painel do dia: sem altura mínima excessiva */
+  .day-schedule { max-height: 300px; overflow-y: auto; }
 
   /* Financeiro: summary 2 colunas */
   .finance-summary { grid-template-columns: repeat(2, 1fr); }

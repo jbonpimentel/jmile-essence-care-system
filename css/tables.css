@@ -12,6 +12,15 @@
   box-shadow: var(--shadow);
 }
 
+/* ── Calendar Layout (desktop: side-by-side) ─────────────── */
+.cal-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+.cal-grid-card { padding: 20px; }
+
 .table-responsive { overflow-x: auto; }
 .table-responsive::-webkit-scrollbar { height: 5px; }
 .table-responsive::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
