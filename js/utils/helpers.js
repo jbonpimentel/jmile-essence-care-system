@@ -107,5 +107,53 @@ const Helpers = {
       .replace(/\D/g, '')
       .replace(/^(\d{2})(\d)/g, '($1) $2')
       .replace(/(\d)(\d{4})$/, '$1-$2');
+  },
+
+  // ─── Cálculos Financeiros ─────────────────────────────────
+
+  /**
+   * Aplica desconto percentual sobre o valor bruto.
+   * @param {number} valor - Valor bruto
+   * @param {number} pct   - Percentual de desconto (default 30)
+   * @returns {number} Valor após desconto
+   */
+  calcDesconto(valor, pct = 30) {
+    return valor * (1 - pct / 100);
+  },
+
+  /**
+   * Calcula o valor descontado pela taxa da maquininha.
+   * Aplica SOMENTE para 'credito' e 'debito'.
+   * @param {number} valor          - Valor base (já com desconto)
+   * @param {string} tipoPagamento  - 'credito' | 'debito' | 'pix' | 'dinheiro'
+   * @returns {{ taxa: number, desconto: number, valorFinal: number }}
+   */
+  calcTaxaMaquininha(valor, tipoPagamento) {
+    const config = (typeof Storage !== 'undefined' && Storage.getConfig) ? Storage.getConfig() : { taxaCredito: 4.49, taxaDebito: 1.99 };
+    let taxa = 0;
+    if (tipoPagamento === 'credito') taxa = config.taxaCredito;
+    else if (tipoPagamento === 'debito') taxa = config.taxaDebito;
+    const desconto = valor * (taxa / 100);
+    return { taxa, desconto, valorFinal: valor - desconto };
+  },
+
+  /**
+   * Calcula o resumo financeiro completo de um lançamento.
+   * @param {number} valorBruto     - Valor bruto do serviço
+   * @param {string} tipoPagamento  - 'credito' | 'debito' | 'pix' | 'dinheiro'
+   * @returns {{ bruto, comDesconto, taxaMaquininha, descontoMaquininha, liquido, taxaPct, descontoPct }}
+   */
+  calcValorLiquido(valorBruto, tipoPagamento) {
+    const config = (typeof Storage !== 'undefined' && Storage.getConfig) ? Storage.getConfig() : { descontoPadrao: 30 };
+    const comDesconto = this.calcDesconto(valorBruto, config.descontoPadrao);
+    const { taxa, desconto: descontoMaquininha, valorFinal: liquido } = this.calcTaxaMaquininha(comDesconto, tipoPagamento);
+    return {
+      bruto: valorBruto,
+      descontoPct: config.descontoPadrao,
+      comDesconto,
+      taxaPct: taxa,
+      descontoMaquininha,
+      liquido
+    };
   }
 };

@@ -44,6 +44,18 @@ const Storage = {
   getFinanceiro() { return this.get('financeiro'); },
   setFinanceiro(v) { this.set('financeiro', v); },
 
+  // ── Configurações do Sistema ─────────────────────────────
+  getConfig() {
+    const defaults = {
+      taxaDebito: 1.99,      // % taxa maquininha débito
+      taxaCredito: 4.49,     // % taxa maquininha crédito (fixo)
+      descontoPadrao: 30     // % desconto padrão do serviço
+    };
+    const saved = this.getObj('config_sistema');
+    return { ...defaults, ...saved };
+  },
+  setConfig(v) { this.set('config_sistema', v); },
+
   // ── Usuários ─────────────────────────────────────────────────
   getUsuarios() { return this.get('usuarios'); },
   setUsuarios(v) { this.set('usuarios', v); },

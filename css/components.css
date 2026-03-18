@@ -212,3 +212,94 @@
 .empty-state { text-align: center; padding: 56px 24px !important; }
 .empty-state__icon { font-size: 40px; margin-bottom: 12px; opacity: 0.35; }
 .empty-state p { color: var(--subtext); font-size: 0.9rem; }
+
+/* ── Instagram tag ────────────────────────────────────────── */
+.instagram-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 600;
+  background: linear-gradient(135deg, rgba(131,58,180,0.10), rgba(253,29,29,0.08), rgba(252,176,69,0.12));
+  color: #9333ea;
+  border: 1px solid rgba(147,51,234,0.2);
+}
+
+.cell-client__insta {
+  font-size: 0.72rem; color: #9333ea; margin-top: 2px;
+}
+
+/* ── Input com prefixo (ícone esquerdo) ──────────────────── */
+.input-icon-wrap { position: relative; display: flex; align-items: center; }
+.input-prefix {
+  position: absolute; left: 12px;
+  font-size: 14px; pointer-events: none; z-index: 1;
+}
+.form-input--prefixed { padding-left: 36px; }
+
+/* ── Painel de Cálculo Financeiro ────────────────────────── */
+.calc-summary {
+  background: linear-gradient(135deg, rgba(12,57,31,0.04), rgba(198,136,219,0.06));
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 4px 0 16px;
+  animation: fadeSlideIn 0.25s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.calc-summary__title {
+  font-size: 0.78rem; font-weight: 700;
+  color: var(--green-dark); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 12px;
+}
+
+.calc-summary__grid { display: flex; flex-direction: column; gap: 6px; }
+
+.calc-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.07);
+}
+.calc-row:last-child { border-bottom: none; }
+
+.calc-row--total {
+  background: rgba(22,163,74,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 4px;
+  border: none;
+}
+
+.calc-label {
+  font-size: 0.8rem; color: var(--text-2); font-weight: 500;
+}
+.calc-row--total .calc-label {
+  font-weight: 700; color: var(--green-dark);
+}
+
+.calc-value {
+  font-size: 0.865rem; font-weight: 600; color: var(--text);
+}
+.calc-value--minus { color: var(--error); }
+.calc-value--liquido {
+  font-size: 1.05rem; font-weight: 800;
+  color: var(--success);
+}
+
+/* ── taxa-badge (tabela financeira) ──────────────────────── */
+.taxa-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px; border-radius: 20px;
+  font-size: 0.65rem; font-weight: 700;
+  background: rgba(220,38,38,0.10);
+  color: var(--error);
+  border: 1px solid rgba(220,38,38,0.18);
+  vertical-align: middle;
+}
+
+/* ── text-muted helper ───────────────────────────────────── */
+.text-muted { color: var(--subtext) !important; }

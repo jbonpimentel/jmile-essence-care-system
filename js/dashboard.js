@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Permite que módulos atualizem badges externamente
   window.Dashboard = { navigate, updateBadges };
 
+  // ── Inicializa Notificações ─────────────────────────────
+  if (window.Notificacoes) Notificacoes.init();
+
   // ── Navega para o módulo inicial ─────────────────────────
   navigate('clientes');
 });

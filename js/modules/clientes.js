@@ -27,7 +27,7 @@ const ModuleClientes = {
       <div class="toolbar">
         <div class="toolbar__search">
           <span class="toolbar__search-icon">🔍</span>
-          <input type="text" id="search-cliente" class="toolbar__search-input" placeholder="Buscar por nome, email ou celular...">
+          <input type="text" id="search-cliente" class="toolbar__search-input" placeholder="Buscar por nome, @instagram ou celular...">
         </div>
         <select id="filter-status" class="toolbar__filter">
           <option value="todos">Todos os status</option>
@@ -44,7 +44,7 @@ const ModuleClientes = {
               <tr>
                 <th>Cliente</th>
                 <th>Celular</th>
-                <th>Email</th>
+                <th>Instagram</th>
                 <th>Nascimento</th>
                 <th>Status</th>
                 <th>Ações</th>
@@ -65,6 +65,16 @@ const ModuleClientes = {
     const clientes = Storage.getClientes();
     const ativos   = clientes.filter(c => c.ativo !== false).length;
     const inativos = clientes.length - ativos;
+
+    // Aniversariantes do mês
+    const hoje = new Date();
+    const mesAtual = hoje.getMonth() + 1;
+    const diaAtual = hoje.getDate();
+    const aniversariantes = clientes.filter(c => {
+      if (!c.nascimento) return false;
+      const [, m, d] = c.nascimento.split('-').map(Number);
+      return m === mesAtual;
+    }).length;
 
     document.getElementById('clientes-stats').innerHTML = `
       <div class="stat-card">
@@ -88,6 +98,13 @@ const ModuleClientes = {
           <div class="stat-card__label">Inativos</div>
         </div>
       </div>
+      <div class="stat-card">
+        <div class="stat-card__icon stat-card__icon--blue">🎂</div>
+        <div>
+          <div class="stat-card__value">${aniversariantes}</div>
+          <div class="stat-card__label">Aniversários no Mês</div>
+        </div>
+      </div>
     `;
   },
 
@@ -98,7 +115,7 @@ const ModuleClientes = {
       const q = search.toLowerCase();
       clientes = clientes.filter(c =>
         c.nome.toLowerCase().includes(q) ||
-        (c.email || '').toLowerCase().includes(q) ||
+        (c.instagram || '').toLowerCase().includes(q) ||
         (c.celular || '').includes(q)
       );
     }
@@ -121,12 +138,16 @@ const ModuleClientes = {
             <div class="cell-client__avatar">${c.nome.charAt(0).toUpperCase()}</div>
             <div>
               <div class="cell-client__name">${Helpers.sanitize(c.nome)}</div>
-              <div class="cell-client__email">${Helpers.sanitize(c.email || '—')}</div>
+              ${c.instagram ? `<div class="cell-client__insta">📸 ${Helpers.sanitize(c.instagram)}</div>` : '<div class="cell-client__email">—</div>'}
             </div>
           </div>
         </td>
         <td>${Helpers.sanitize(c.celular || '—')}</td>
-        <td>${Helpers.sanitize(c.email || '—')}</td>
+        <td>
+          ${c.instagram
+            ? `<span class="instagram-tag">${Helpers.sanitize(c.instagram)}</span>`
+            : '—'}
+        </td>
         <td>${Helpers.formatDate(c.nascimento)}</td>
         <td>
           <span class="badge ${c.ativo === false ? 'badge--inactive' : 'badge--active'}">
@@ -170,6 +191,11 @@ const ModuleClientes = {
     const cliente  = id ? clientes.find(c => c.id === id) : null;
     const title    = cliente ? 'Editar Cliente' : 'Novo Cliente';
 
+    // Normaliza instagram (garante que começa com @)
+    const instaVal = cliente?.instagram
+      ? (cliente.instagram.startsWith('@') ? cliente.instagram : '@' + cliente.instagram)
+      : '';
+
     UI.openModal(title, `
       <form id="form-cliente" novalidate>
         <div class="form-row form-row--2">
@@ -185,8 +211,11 @@ const ModuleClientes = {
         </div>
         <div class="form-row form-row--2">
           <div class="form-field">
-            <label>E-mail</label>
-            <input type="email" id="fc-email" class="form-input" value="${Helpers.sanitize(cliente?.email || '')}" placeholder="email@exemplo.com">
+            <label>Instagram</label>
+            <div class="input-icon-wrap">
+              <span class="input-prefix">📸</span>
+              <input type="text" id="fc-instagram" class="form-input form-input--prefixed" value="${Helpers.sanitize(instaVal)}" placeholder="@usuario">
+            </div>
           </div>
           <div class="form-field">
             <label>Data de nascimento</label>
@@ -219,16 +248,26 @@ const ModuleClientes = {
       celularInput.value = Helpers.maskPhone(celularInput.value);
     });
 
+    // Instagram: auto-adiciona @ se necessário
+    const instaInput = document.getElementById('fc-instagram');
+    instaInput.addEventListener('blur', () => {
+      let v = instaInput.value.trim();
+      if (v && !v.startsWith('@')) instaInput.value = '@' + v;
+    });
+
     document.getElementById('btn-save-cliente').addEventListener('click', () => this.saveCliente(id));
   },
 
   saveCliente(id) {
-    const nome = document.getElementById('fc-nome').value.trim();
-    const celular = document.getElementById('fc-celular').value.trim();
-    const email = document.getElementById('fc-email').value.trim();
+    const nome       = document.getElementById('fc-nome').value.trim();
+    const celular    = document.getElementById('fc-celular').value.trim();
+    let instagram    = document.getElementById('fc-instagram').value.trim();
     const nascimento = document.getElementById('fc-nascimento').value;
-    const endereco = document.getElementById('fc-endereco').value.trim();
+    const endereco   = document.getElementById('fc-endereco').value.trim();
     const observacoes = document.getElementById('fc-obs').value.trim();
+
+    // Normaliza instagram
+    if (instagram && !instagram.startsWith('@')) instagram = '@' + instagram;
 
     // Validação
     const nomeErr = document.getElementById('fc-nome-err');
@@ -248,13 +287,13 @@ const ModuleClientes = {
     if (id) {
       const idx = clientes.findIndex(c => c.id === id);
       if (idx !== -1) {
-        clientes[idx] = { ...clientes[idx], nome, celular, email, nascimento, endereco, observacoes };
+        clientes[idx] = { ...clientes[idx], nome, celular, instagram, nascimento, endereco, observacoes };
       }
       UI.toast('Cliente atualizado com sucesso!', 'success');
     } else {
       clientes.push({
         id: Helpers.generateId(),
-        nome, celular, email, nascimento, endereco, observacoes,
+        nome, celular, instagram, nascimento, endereco, observacoes,
         ativo: true,
         criadoEm: new Date().toISOString()
       });
@@ -265,6 +304,7 @@ const ModuleClientes = {
     UI.closeModal();
     this.render();
     if (window.Dashboard) Dashboard.updateBadges();
+    if (window.Notificacoes) Notificacoes.refresh();
   },
 
   toggleStatus(id) {
