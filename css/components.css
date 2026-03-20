@@ -6,11 +6,13 @@
 /* ── Buttons ─────────────────────────────────────────────── */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  height: 38px; padding: 0 18px; border-radius: 9px;
+  height: 38px; padding: 0 18px; border-radius: 10px;
   font-size: 0.84rem; font-weight: 600; font-family: 'Inter', sans-serif;
   border: 1.5px solid transparent; cursor: pointer;
-  transition: all 0.2s ease; white-space: nowrap; letter-spacing: 0.02em;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease;
+  white-space: nowrap; letter-spacing: 0.02em;
 }
+.btn:active:not(:disabled) { transform: scale(0.96); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Primário — Adicionar / Salvar / Confirmar */
@@ -22,7 +24,7 @@
 }
 .btn--primary:hover:not(:disabled) {
   background: var(--primary-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(198,136,219,0.45);
 }
 
@@ -36,7 +38,8 @@
 }
 .btn--gold:hover:not(:disabled) {
   background: #b5c46f;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(198,211,131,0.45);
 }
 
 /* Editar — Secundário com green-light */
@@ -138,10 +141,10 @@
 .form-input, .form-select, .form-textarea {
   background: var(--white);
   border: 1.5px solid var(--border);
-  border-radius: 9px;
+  border-radius: 10px;
   color: var(--text); font-size: 0.9rem; font-family: 'Inter', sans-serif;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .form-input, .form-select { height: 42px; padding: 0 14px; }
 .form-textarea            { padding: 12px 14px; resize: vertical; min-height: 80px; }

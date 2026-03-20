@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     procedimentos: { title: 'Procedimentos',           render: () => ModuleProcedimentos.render() },
     calendario:    { title: 'Calendário',              render: () => ModuleCalendario.render() },
     financeiro:    { title: 'Financeiro',              render: () => ModuleFinanceiro.render() },
+    notificacoes:  { title: 'Avisos e Notificações',   render: () => Notificacoes.renderFullPage() },
     contas:        { title: 'Gerenciamento de Conta',  render: () => ModuleContas.render() }
   };
 
@@ -59,7 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
     UI.setLoading(true);
     setTimeout(() => {
       try {
+        const contentArea = document.getElementById('content-area');
+        contentArea.classList.remove('content-fade');
+        
         modules[moduleKey].render();
+        
+        // Trigger reflow para reiniciar a animação
+        void contentArea.offsetWidth;
+        contentArea.classList.add('content-fade');
       } catch (err) {
         document.getElementById('content-area').innerHTML =
           `<div class="loading"><p>⚠ Erro ao carregar módulo: ${err.message}</p></div>`;

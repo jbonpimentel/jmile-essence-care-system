@@ -44,8 +44,8 @@
 
   --radius: 12px;
   --transition: 0.22s ease;
-  --shadow: 0 4px 20px rgba(12,57,31,0.10);
-  --shadow-md: 0 8px 32px rgba(12,57,31,0.14);
+  --shadow: 0 4px 20px rgba(12,57,31,0.06);
+  --shadow-md: 0 10px 30px rgba(12,57,31,0.12);
 }
 
 html, body {
@@ -192,6 +192,15 @@ html, body {
 }
 .content::-webkit-scrollbar { width: 6px; }
 .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+/* Animação de entrada de rotas (Módulos) */
+.content-fade {
+  animation: fade-in-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ── Loading ─────────────────────────────────────────────── */
 .loading {

@@ -121,7 +121,7 @@ const Notificacoes = {
   },
 
   /**
-   * Injeta o ícone do sino na topbar.
+   * Injeta o ícone do sino na topbar (usado como atalho).
    */
   _injectBell() {
     const topbarRight = document.querySelector('.topbar__right');
@@ -135,99 +135,103 @@ const Notificacoes = {
         <span class="notif-bell__icon">🔔</span>
         <span class="notif-bell__badge" id="notif-badge" style="display:none">0</span>
       </button>
-      <div class="notif-dropdown" id="notif-dropdown" style="display:none">
-        <div class="notif-dropdown__header">
-          <span class="notif-dropdown__title">🔔 Notificações</span>
-          <button class="notif-dropdown__close" id="notif-close">✕</button>
-        </div>
-        <div class="notif-dropdown__list" id="notif-list">
-          <div class="notif-empty">Nenhuma notificação no momento</div>
-        </div>
-      </div>
     `;
 
     // Insere ANTES da data
     const dateEl = topbarRight.querySelector('#topbar-date');
-    topbarRight.insertBefore(bell, dateEl);
+    if (dateEl) {
+      topbarRight.insertBefore(bell, dateEl);
+    } else {
+      topbarRight.appendChild(bell);
+    }
 
-    // Eventos
+    // Navega para aba de Notificações ao clicar
     document.getElementById('notif-bell-btn').addEventListener('click', e => {
-      e.stopPropagation();
-      this._toggleDropdown();
-    });
-
-    document.getElementById('notif-close').addEventListener('click', e => {
-      e.stopPropagation();
-      this._closeDropdown();
-    });
-
-    // Fecha ao clicar fora
-    document.addEventListener('click', e => {
-      const dropdown = document.getElementById('notif-dropdown');
-      const bell = document.getElementById('notif-bell');
-      if (dropdown && bell && !bell.contains(e.target)) {
-        this._closeDropdown();
-      }
+      e.preventDefault();
+      if (window.Dashboard) Dashboard.navigate('notificacoes');
     });
   },
 
   /**
-   * Atualiza badge e lista de notificações.
+   * Atualiza badge da navbar e do sino.
    */
   refresh() {
     const notifs = this.getAll();
-    const badge  = document.getElementById('notif-badge');
-    const list   = document.getElementById('notif-list');
-    const bellBtn = document.getElementById('notif-bell-btn');
-
-    if (!badge) return;
-
-    // Badge
     const count = notifs.length;
-    badge.textContent = count > 9 ? '9+' : count;
-    badge.style.display = count > 0 ? 'flex' : 'none';
+    
+    // Badge do sino na topbar
+    const badgeTopbar = document.getElementById('notif-badge');
+    const bellBtn = document.getElementById('notif-bell-btn');
+    if (badgeTopbar) {
+      badgeTopbar.textContent = count > 9 ? '9+' : count;
+      badgeTopbar.style.display = count > 0 ? 'flex' : 'none';
+    }
     if (bellBtn) {
       bellBtn.classList.toggle('notif-bell__btn--active', count > 0);
     }
 
-    if (!list) return;
-
-    if (count === 0) {
-      list.innerHTML = '<div class="notif-empty">✅ Nenhuma notificação no momento</div>';
-      return;
+    // Badge da Aba Lateral (nav__item)
+    if (window.UI) {
+      UI.setBadge('notificacoes', count);
     }
+  },
 
-    list.innerHTML = notifs.map(n => `
-      <div class="notif-item notif-item--${n.urgencia}" data-tipo="${n.tipo}">
-        <div class="notif-item__icon">${n.icone}</div>
-        <div class="notif-item__body">
-          <div class="notif-item__text">${n.texto}</div>
-          ${n.tipo === 'retorno' ? `
-            <div class="notif-item__action">
-              💬 <em>"Oi ${Helpers.sanitize(n.cliente.nome.split(' ')[0])}! Já faz um tempo desde seu último atendimento, que tal agendar novamente? 💆‍♀️"</em>
-            </div>
-          ` : ''}
+  /**
+   * Renderiza a página completa de Notificações (Aba)
+   */
+  renderFullPage() {
+    const list = this.getAll();
+    let html = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Notificações e Avisos</h1>
+          <p class="page-header__subtitle">Aniversariantes e lembretes de retorno de clientes</p>
         </div>
       </div>
-    `).join('');
-  },
+    `;
 
-  _toggleDropdown() {
-    const dd = document.getElementById('notif-dropdown');
-    if (!dd) return;
-    const isOpen = dd.style.display !== 'none';
-    if (isOpen) {
-      this._closeDropdown();
+    if (list.length === 0) {
+      html += `
+        <div class="empty-state">
+          <div class="empty-state__icon">✅</div>
+          <p>Tudo tranquilo! Nenhuma notificação pendente no momento.</p>
+        </div>
+      `;
     } else {
-      dd.style.display = 'block';
-      requestAnimationFrame(() => dd.classList.add('notif-dropdown--show'));
-    }
-  },
+      html += `<div style="display:flex; flex-direction:column; gap:16px; margin-bottom: 24px;">`;
+      list.forEach(n => {
+        let telefone = n.cliente.telefone ? n.cliente.telefone.replace(/\\D/g, '') : '';
+        let whatsappBtn = telefone ? 
+          `<button class="btn btn--primary btn--sm" style="margin-top: 10px;" onclick="window.open('https://wa.me/55${telefone}', '_blank')">📱 Enviar WhatsApp</button>` : 
+          `<span class="badge badge--inactive" style="margin-top: 10px;">Sem telefone cadastrado</span>`;
 
-  _closeDropdown() {
-    const dd = document.getElementById('notif-dropdown');
-    if (!dd) return;
-    dd.classList.remove('notif-dropdown--show');
-    setTimeout(() => { if (dd) dd.style.display = 'none'; }, 220);
+        let colorObj = '';
+        if (n.urgencia === 'alta') colorObj = 'rgba(220,38,38,0.1)';
+        else if (n.urgencia === 'media') colorObj = 'rgba(198,136,219,0.15)';
+        else colorObj = 'rgba(37,99,235,0.1)';
+
+        html += `
+          <div class="stat-card" style="align-items:flex-start">
+            <div class="stat-card__icon" style="background: ${colorObj}; font-size:24px;">
+              ${n.icone}
+            </div>
+            <div style="flex:1">
+              <div style="font-size:1rem; color:var(--text); line-height:1.5; margin-bottom: 4px;">
+                ${n.texto}
+              </div>
+              ${n.tipo === 'retorno' ? `
+                <div style="font-size:0.85rem; color:var(--subtext); margin-bottom: 10px;">
+                  💬 <em>"Oi ${Helpers.sanitize(n.cliente.nome.split(' ')[0])}! Já faz um tempo desde seu último atendimento, que tal agendar novamente? 💆‍♀️"</em>
+                </div>
+              ` : ''}
+              ${whatsappBtn}
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    document.getElementById('content-area').innerHTML = html;
   }
 };
