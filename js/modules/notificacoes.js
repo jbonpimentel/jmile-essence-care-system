@@ -22,14 +22,18 @@ const Notificacoes = {
   getAniversariantes() {
     const clientes = Storage.getClientes().filter(c => c.ativo !== false && c.nascimento);
     const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zera horas para a diferença de dias ser exata
     const result = [];
 
     clientes.forEach(c => {
-      const [ano, mes, dia] = c.nascimento.split('-').map(Number);
-      const aniversario = new Date(hoje.getFullYear(), mes - 1, dia);
+      const parts = c.nascimento.split('-');
+      if (parts.length !== 3) return;
+      
+      const [ano, mes, dia] = parts.map(Number);
+      const aniversario = new Date(hoje.getFullYear(), mes - 1, dia, 0, 0, 0, 0);
 
-      // Se já passou esse ano, verifica no próximo
-      if (aniversario < new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())) {
+      // Se já passou esse ano (comparando datas zeradas), verifica no próximo
+      if (aniversario < hoje) {
         aniversario.setFullYear(hoje.getFullYear() + 1);
       }
 
